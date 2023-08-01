@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="box_width">20dp</dimen>
+    <dimen name="box_margin">8dp</dimen>
+    <dimen name="box_border_width">2dp</dimen>
+    <dimen name="box_corner_radius">8dp</dimen>
+</resources>

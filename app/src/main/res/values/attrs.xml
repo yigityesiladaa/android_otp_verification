@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomToolbar">
+        <attr name="title" format="string" />
+    </declare-styleable>
+    <declare-styleable name="CustomCircleView">
+        <attr name="circleColor" format="color" />
+        <attr name="isCircleFilled" format="boolean" />
+    </declare-styleable>
+</resources>

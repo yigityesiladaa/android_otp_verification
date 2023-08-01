@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">OtpUI</string>
+    <string name="cancel_text">iptal</string>
+    <string name="finance_credit">İhtiyaç Kredisi</string>
+    <string name="timer_text">Kodunuz %s içinde numaranıza gönderilecektir.</string>
+    <string name="otp_title_text">Telefonuna gelen 4 haneli kodu girebilir misin?</string>
+    <string name="resend_otp_code_text">Kodu Tekrar Gönder</string>
+</resources>
