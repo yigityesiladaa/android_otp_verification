@@ -19,7 +19,9 @@ class CustomOtpView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr), View.OnKeyListener {
 
-    private val numberOfBoxes = 4
+    companion object {
+        private const val NUMBER_OF_BOXES = 4
+    }
     private val boxWidth = getDimensionPixelSize(R.dimen.box_width)
     private val boxMargin = getDimensionPixelSize(R.dimen.box_margin)
     private val otpBoxes = ArrayList<EditText>()
@@ -28,7 +30,7 @@ class CustomOtpView @JvmOverloads constructor(
         orientation = HORIZONTAL
         gravity = Gravity.CENTER
 
-        for (i in 1..numberOfBoxes) {
+        repeat(NUMBER_OF_BOXES) {
             val editText = createOtpBox()
             addView(editText)
             editText.setOnKeyListener(this)
@@ -55,16 +57,14 @@ class CustomOtpView @JvmOverloads constructor(
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val currentBoxIndex = otpBoxes.indexOf(this@apply)
-                when (count) {
-                    1 -> {
-                        val nextBoxIndex = currentBoxIndex + 1
-                        if (nextBoxIndex < otpBoxes.size) {
-                            otpBoxes[nextBoxIndex].requestFocus()
-                        } else {
-                            clearFocus()
-                        }
-                        this@apply.setBackgroundResource(R.drawable.circle_filled)
+                if(count == 1){
+                    val nextBoxIndex = currentBoxIndex + 1
+                    if (nextBoxIndex < otpBoxes.size) {
+                        otpBoxes[nextBoxIndex].requestFocus()
+                    } else {
+                        clearFocus()
                     }
+                    this@apply.setBackgroundResource(R.drawable.circle_filled)
                 }
                 if (currentBoxIndex == otpBoxes.size - 1 && count == 1) clearFocus()
             }
@@ -76,21 +76,15 @@ class CustomOtpView @JvmOverloads constructor(
 
     fun setOtpFromSms(smsContent: String) {
         val otpCodeRegex = Regex("""otp code: (\d{4})""", RegexOption.IGNORE_CASE)
-        val matchResult = otpCodeRegex.find(smsContent)
-        val otpCode = matchResult?.groupValues?.get(1)
-
-        if (!otpCode.isNullOrBlank()) {
-            otpCode.forEachIndexed { index, char ->
-                if (index < otpBoxes.size) {
-                    otpBoxes[index].apply {
-                        setText(char.toString())
-                        setBackgroundResource(R.drawable.circle_filled)
-                        if (index == otpBoxes.size - 1) {
-                            clearFocus()
-                        } else {
-                            otpBoxes[index + 1].requestFocus()
-                        }
-                    }
+        otpCodeRegex.find(smsContent)?.groupValues?.get(1)?.forEachIndexed { index, char ->
+            if (index < otpBoxes.size) {
+                val box = otpBoxes[index]
+                box.setText(char.toString())
+                box.setBackgroundResource(R.drawable.circle_filled)
+                if (index == otpBoxes.size - 1) {
+                    box.clearFocus()
+                } else {
+                    otpBoxes[index + 1].requestFocus()
                 }
             }
         }
@@ -102,18 +96,16 @@ class CustomOtpView @JvmOverloads constructor(
         return params
     }
 
-    private fun getDimensionPixelSize(id: Int): Int {
-        return resources.getDimensionPixelSize(id)
+    fun clearOtp() {
+        otpBoxes.forEachIndexed { index, box ->
+            box.setText("")
+            box.setBackgroundResource(R.drawable.circle_empty)
+            if (index == 0) box.requestFocus()
+        }
     }
 
-    fun clearOtp() {
-        for (i in 0 until otpBoxes.size) {
-            otpBoxes[i].setText("")
-            otpBoxes[i].setBackgroundResource(R.drawable.circle_empty)
-            if (i == 0) {
-                otpBoxes[i].requestFocus()
-            }
-        }
+    private fun getDimensionPixelSize(id: Int): Int {
+        return resources.getDimensionPixelSize(id)
     }
 
     fun focusFirstOtpBox() {
@@ -125,16 +117,14 @@ class CustomOtpView @JvmOverloads constructor(
             val currentBoxIndex = otpBoxes.indexOf(v)
 
             if (keyCode == KeyEvent.KEYCODE_DEL && event?.action == KeyEvent.ACTION_DOWN) {
-                if (currentBoxIndex > 0) {
-                    if (v.text.isBlank()) {
-                        otpBoxes[currentBoxIndex - 1].requestFocus()
-                        otpBoxes[currentBoxIndex - 1].setBackgroundResource(R.drawable.circle_empty)
-                        otpBoxes[currentBoxIndex - 1].setText("")
-                    }
+                if (currentBoxIndex > 0 && v.text.isBlank()) {
+                    val prevBox = otpBoxes[currentBoxIndex - 1]
+                    prevBox.requestFocus()
+                    prevBox.setBackgroundResource(R.drawable.circle_empty)
+                    prevBox.setText("")
                 }
             }
         }
-
         return false
     }
 }
