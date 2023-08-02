@@ -6,38 +6,35 @@
     android:paddingVertical="8dp"
     android:paddingHorizontal="16dp">
 
-    <com.otpui.components.CustomCircleView
+    <ImageView
         android:id="@+id/circle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        app:isCircleFilled="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/circle2"
         app:layout_constraintHorizontal_chainStyle="packed"/>
 
-    <com.otpui.components.CustomCircleView
+    <ImageView
         android:id="@+id/circle2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:isCircleFilled="false"
         android:layout_marginEnd="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/circle1"
+        app:layout_constraintStart_toEndOf="@id/circle1"
         app:layout_constraintEnd_toStartOf="@id/circle3"/>
 
-    <com.otpui.components.CustomCircleView
+    <ImageView
         android:id="@+id/circle3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:isCircleFilled="false"
         android:layout_marginEnd="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/circle2"
+        app:layout_constraintStart_toEndOf="@id/circle2"
         app:layout_constraintEnd_toStartOf="@id/circle4"/>
 
     <ImageView
@@ -47,7 +44,7 @@
         app:isCircleFilled="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/circle3"
+        app:layout_constraintStart_toEndOf="@id/circle3"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

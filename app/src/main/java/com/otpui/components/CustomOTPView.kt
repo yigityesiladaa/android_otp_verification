@@ -31,9 +31,10 @@ class CustomOtpView @JvmOverloads constructor(
         gravity = Gravity.CENTER
 
         repeat(NUMBER_OF_BOXES) {
-            val editText = createOtpBox()
+            val editText = createOtpBox().apply {
+                setOnKeyListener(this@CustomOtpView)
+            }
             addView(editText)
-            editText.setOnKeyListener(this)
             otpBoxes.add(editText)
         }
         otpBoxes[0].requestFocus()
@@ -79,12 +80,14 @@ class CustomOtpView @JvmOverloads constructor(
         otpCodeRegex.find(smsContent)?.groupValues?.get(1)?.forEachIndexed { index, char ->
             if (index < otpBoxes.size) {
                 val box = otpBoxes[index]
-                box.setText(char.toString())
-                box.setBackgroundResource(R.drawable.circle_filled)
-                if (index == otpBoxes.size - 1) {
-                    box.clearFocus()
-                } else {
-                    otpBoxes[index + 1].requestFocus()
+                box.apply {
+                    setText(char.toString())
+                    setBackgroundResource(R.drawable.circle_filled)
+                    if (index == otpBoxes.size - 1) {
+                        clearFocus()
+                    } else {
+                        otpBoxes[index + 1].requestFocus()
+                    }
                 }
             }
         }
@@ -98,9 +101,11 @@ class CustomOtpView @JvmOverloads constructor(
 
     fun clearOtp() {
         otpBoxes.forEachIndexed { index, box ->
-            box.setText("")
-            box.setBackgroundResource(R.drawable.circle_empty)
-            if (index == 0) box.requestFocus()
+            box.apply {
+                setText("")
+                setBackgroundResource(R.drawable.circle_empty)
+                if (index == 0) requestFocus()
+            }
         }
     }
 
@@ -119,12 +124,15 @@ class CustomOtpView @JvmOverloads constructor(
             if (keyCode == KeyEvent.KEYCODE_DEL && event?.action == KeyEvent.ACTION_DOWN) {
                 if (currentBoxIndex > 0 && v.text.isBlank()) {
                     val prevBox = otpBoxes[currentBoxIndex - 1]
-                    prevBox.requestFocus()
-                    prevBox.setBackgroundResource(R.drawable.circle_empty)
-                    prevBox.setText("")
+                    prevBox.apply {
+                        requestFocus()
+                        setBackgroundResource(R.drawable.circle_empty)
+                        setText("")
+                    }
                 }
             }
         }
+
         return false
     }
 }

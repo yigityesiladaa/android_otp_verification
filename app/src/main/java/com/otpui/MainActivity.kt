@@ -83,24 +83,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        otpHelper.stopSmsListener()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQ_USER_CONSENT) {
             if (resultCode == RESULT_OK && data != null) {
                 val message = data.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
                 message?.let {
-                    binding.customOtpView.setOtpFromSms(it)
                     countDownTimer.cancel()
+                    binding.run {
+                        customOtpView.setOtpFromSms(it)
+                        txtTimer.text = ""
+                    }
                     Toast.makeText(this@MainActivity, "Success! message: $message", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
+
+    override fun onStop() {
+        super.onStop()
+        otpHelper.stopSmsListener()
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

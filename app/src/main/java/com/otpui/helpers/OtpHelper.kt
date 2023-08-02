@@ -22,18 +22,14 @@ class OtpHelper(private val context: Activity, private val customOtpView: Custom
     }
 
     private fun startSmartUserConsent() {
-        val client = SmsRetriever.getClient(context)
-        client.startSmsUserConsent(null)
+        SmsRetriever.getClient(context).startSmsUserConsent(null)
     }
 
     private fun startSmsListener() {
         smsReceiver = SmsReceiver().apply {
-            setCustomOtpView(customOtpView)
             smsReceiverListener = object : SmsReceiverListener {
                 override fun onSuccess(intent: Intent?) {
-                    intent?.let {
-                        handleSmsReceived(intent)
-                    }
+                    intent?.let {handleSmsReceived(intent)}
                 }
 
                 override fun onFailure() {
@@ -42,8 +38,7 @@ class OtpHelper(private val context: Activity, private val customOtpView: Custom
             }
         }
 
-        val intentFilter = android.content.IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
-        context.registerReceiver(smsReceiver, intentFilter)
+        context.registerReceiver(smsReceiver, android.content.IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
     }
 
     fun stopSmsListener() {
