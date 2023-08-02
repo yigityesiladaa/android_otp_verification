@@ -4,26 +4,26 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.otpui.databinding.ActivityMainBinding
+import com.otpui.helpers.CountDownHelper
 import com.otpui.helpers.KeyboardHelper
 import com.otpui.helpers.OtpHelper
 
 @RequiresApi(Build.VERSION_CODES.Q)
 class MainActivity : AppCompatActivity() {
 
-    companion object{
+    companion object {
         const val REQ_USER_CONSENT = 200
     }
 
     lateinit var binding: ActivityMainBinding
-    private lateinit var countDownTimer: CountDownTimer
     private var isTimerRunning = false
     private lateinit var otpHelper: OtpHelper
+    private val countDownHelper = CountDownHelper
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,36 +34,38 @@ class MainActivity : AppCompatActivity() {
         setupViews()
         setupTimer()
         registerResendOtpCodeButton()
-        countDownTimer.start()
-
     }
 
-    private fun setupViews(){
-        otpHelper = OtpHelper(this,binding.customOtpView)
+    private fun setupViews() {
+        otpHelper = OtpHelper(this)
     }
 
     private fun setupTimer() {
-        val durationInMillis: Long = 5 * 60 * 1000
-        countDownTimer = object : CountDownTimer(durationInMillis, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                isTimerRunning = true
-                val remainingSeconds = millisUntilFinished / 1000
-                updateUI(remainingSeconds)
-            }
+        countDownHelper.initializeCountDownHelper(
+            5 * 60 * 1000,
+            1000,
+            { millisUntilFinished -> onTick(millisUntilFinished) },
+            { onFinish() },
+        ).start()
+    }
 
-            override fun onFinish() {
-                isTimerRunning = false
-                updateUI(0)
-                binding.customOtpView.clearFocus()
-                KeyboardHelper.hideSoftKeyboard(this@MainActivity, binding.customOtpView)
-            }
-        }
+    private fun onTick(millisUntilFinished: Long) {
+        isTimerRunning = true
+        val remainingSeconds = millisUntilFinished / 1000
+        updateUI(remainingSeconds)
+    }
+
+    private fun onFinish() {
+        isTimerRunning = false
+        updateUI(0)
+        binding.customOtpView.clearFocus()
+        KeyboardHelper.hideSoftKeyboard(this@MainActivity, binding.customOtpView)
     }
 
     private fun registerResendOtpCodeButton() {
         binding.btnResendOtpCode.setOnClickListener {
-            countDownTimer.cancel()
-            countDownTimer.start()
+            countDownHelper.cancel()
+            countDownHelper.start()
             KeyboardHelper.showSoftKeyboard(this@MainActivity, binding.customOtpView)
             binding.run {
                 customOtpView.clearOtp()
@@ -78,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         val formattedTime = String.format("%02d:%02d", remainingSeconds / 60, remainingSeconds % 60)
         binding.run {
             btnResendOtpCode.visibility = if (remainingSeconds == 0L) View.VISIBLE else View.GONE
-            txtTimer.text = getString(R.string.timer_text, formattedTime)
+            txtTimer.text = if (remainingSeconds == 0L) "" else getString(R.string.timer_text, formattedTime)
             customOtpView.isEnabled = remainingSeconds == 0L
         }
     }
@@ -89,7 +91,7 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == RESULT_OK && data != null) {
                 val message = data.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
                 message?.let {
-                    countDownTimer.cancel()
+                    countDownHelper.cancel()
                     binding.run {
                         customOtpView.setOtpFromSms(it)
                         txtTimer.text = ""
@@ -104,7 +106,6 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
         otpHelper.stopSmsListener()
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

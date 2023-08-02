@@ -19,7 +19,6 @@ class SmsReceiver : BroadcastReceiver() {
         if (intent?.action == SmsRetriever.SMS_RETRIEVED_ACTION) {
             intent.extras?.let { extras ->
                 val smsRetrieverStatus = extras.get(SmsRetriever.EXTRA_STATUS) as? Status
-
                 smsRetrieverStatus?.let { status ->
                     when (status.statusCode) {
                         CommonStatusCodes.SUCCESS -> {
@@ -27,7 +26,7 @@ class SmsReceiver : BroadcastReceiver() {
                             smsReceiverListener?.onSuccess(messageIntent)
                         }
 
-                        CommonStatusCodes.TIMEOUT -> {
+                        CommonStatusCodes.TIMEOUT, CommonStatusCodes.ERROR -> {
                             smsReceiverListener?.onFailure()
                         }
                         else -> {}

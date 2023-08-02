@@ -22,7 +22,8 @@ class CustomOtpView @JvmOverloads constructor(
     companion object {
         private const val NUMBER_OF_BOXES = 4
     }
-    private val boxWidth = getDimensionPixelSize(R.dimen.box_width)
+
+    private val boxSize = getDimensionPixelSize(R.dimen.box_size)
     private val boxMargin = getDimensionPixelSize(R.dimen.box_margin)
     private val otpBoxes = ArrayList<EditText>()
 
@@ -50,7 +51,6 @@ class CustomOtpView @JvmOverloads constructor(
         textSize = 20f
         maxLines = 1
         inputType = InputType.TYPE_CLASS_NUMBER
-        setPadding(0, 0, 0, 0)
         textCursorDrawable = null
 
         addTextChangedListener(object : TextWatcher {
@@ -94,7 +94,7 @@ class CustomOtpView @JvmOverloads constructor(
     }
 
     private fun getOtpBoxLayoutParams(): LayoutParams {
-        val params = LayoutParams(boxWidth, boxWidth)
+        val params = LayoutParams(boxSize, boxSize)
         params.marginEnd = boxMargin
         return params
     }

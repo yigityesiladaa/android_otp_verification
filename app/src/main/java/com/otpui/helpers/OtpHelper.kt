@@ -8,11 +8,10 @@ import androidx.annotation.RequiresApi
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.otpui.MainActivity
 import com.otpui.SmsReceiverListener
-import com.otpui.components.CustomOtpView
 import com.otpui.receivers.SmsReceiver
 
 @RequiresApi(Build.VERSION_CODES.Q)
-class OtpHelper(private val context: Activity, private val customOtpView: CustomOtpView) {
+class OtpHelper(private val context: Activity) {
 
     private var smsReceiver: SmsReceiver? = null
 
@@ -41,15 +40,15 @@ class OtpHelper(private val context: Activity, private val customOtpView: Custom
         context.registerReceiver(smsReceiver, android.content.IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
     }
 
+    private fun handleSmsReceived(intent: Intent) {
+        context.startActivityForResult(intent, MainActivity.REQ_USER_CONSENT)
+    }
+
     fun stopSmsListener() {
         smsReceiver?.let {
             context.unregisterReceiver(it)
             smsReceiver = null
         }
-    }
-
-    private fun handleSmsReceived(intent: Intent) {
-        context.startActivityForResult(intent, MainActivity.REQ_USER_CONSENT)
     }
 
     private fun showToast(message: String) {
