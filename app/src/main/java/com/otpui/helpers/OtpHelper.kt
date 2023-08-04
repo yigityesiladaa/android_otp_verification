@@ -2,15 +2,12 @@ package com.otpui.helpers
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Build
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.otpui.MainActivity
 import com.otpui.SmsReceiverListener
 import com.otpui.receivers.SmsReceiver
 
-@RequiresApi(Build.VERSION_CODES.Q)
 class OtpHelper(private val context: Activity) {
 
     private var smsReceiver: SmsReceiver? = null

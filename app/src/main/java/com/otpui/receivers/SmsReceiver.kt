@@ -3,8 +3,6 @@ package com.otpui.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
@@ -14,7 +12,6 @@ class SmsReceiver : BroadcastReceiver() {
 
     var smsReceiverListener: SmsReceiverListener? = null
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onReceive(context: Context, intent: Intent?) {
         if (intent?.action == SmsRetriever.SMS_RETRIEVED_ACTION) {
             intent.extras?.let { extras ->

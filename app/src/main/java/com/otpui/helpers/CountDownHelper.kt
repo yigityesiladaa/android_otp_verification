@@ -39,6 +39,12 @@ object CountDownHelper {
         countDownTimer?.start()
     }
 
+    fun restart(){
+        checkInitialization()
+        countDownTimer?.cancel()
+        countDownTimer?.start()
+    }
+
     fun cancel() {
         checkInitialization()
         countDownTimer?.cancel()

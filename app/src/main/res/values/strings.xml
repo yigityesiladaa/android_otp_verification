@@ -5,4 +5,7 @@
     <string name="timer_text">Kodunuz %s içinde numaranıza gönderilecektir.</string>
     <string name="otp_title_text">Telefonuna gelen 4 haneli kodu girebilir misin?</string>
     <string name="resend_otp_code_text">Kodu Tekrar Gönder</string>
+    <string name="otp_correct_text">Otp Correct</string>
+    <string name="otp_wrong_text">Otp Wrong</string>
+    <string name="otp_code">0000</string>
 </resources>
